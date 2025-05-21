@@ -3,8 +3,8 @@ import os
 import datetime # Added for transcript saving
 from dotenv import load_dotenv
 import google.generativeai as genai
-from google.generativeai.types import Content, Part, LiveConnectConfig, Modality
-import google.generativeai.types.generation_types as genai_types # For specific exceptions
+from google.genai.types import Content, Part, LiveConnectConfig, Modality # Corrected import path
+from google.generativeai.types import BlockedPromptException, StopCandidateException # For specific exceptions
 
 load_dotenv()
 
@@ -166,7 +166,7 @@ async def run_interview_session(questions):
                         print("No response or transcription from LLM for the candidate's answer.")
                         transcript.append({"speaker": "LLM", "message": "[No response/transcription received]", "type": "llm_failed_response"})
 
-                except (genai_types.BlockedPromptException, genai_types.StopCandidateException) as specific_api_error:
+                except (BlockedPromptException, StopCandidateException) as specific_api_error:
                     print(f"API Error during question {i+1} ('{question_to_ask}'): {specific_api_error}")
                     transcript.append({"speaker": "System", "message": f"API Error for question '{question_to_ask}': {specific_api_error}", "type": "error_api"})
                     # Continue to the next question
